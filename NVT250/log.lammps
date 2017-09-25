@@ -1,0 +1,13 @@
+LAMMPS (17 Nov 2016)
+# Affiliation: Dept. Materials Science and Engineering
+# University of Arizona
+# Abduljabar Alsayoud
+
+
+# Units energy:eV time:ps distance:angstrom flux:energy*velocity
+#---------Sim variables---------------
+variable fileprefix string HW3_NVT250
+variable temp_s equal '250.0'
+variable press_s equal '1.0'
+log log.${fileprefix}
+log log.HW3_NVT250

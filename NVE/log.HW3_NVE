@@ -1,0 +1,37 @@
+
+#-----------Setup----------------------
+units metal            #Energy = eV , Distance= Angstroms
+dimension 3
+boundary p p p         #Periodic boundary conditions
+atom_style atomic
+
+# ---------- Read Data ---------------------
+# Read config files (get the structure from https://www.materialsproject.org/)
+read_data Al_mp_NVT_optimized.data
+  orthogonal box = (-16.3873 -16.3873 -16.3873) to (24.4652 24.4652 24.4652)
+  7 by 2 by 2 MPI processor grid
+  reading atoms ...
+  4000 atoms
+
+pair_style eam/alloy
+pair_coeff * *  LAMMPS_POTENTIALS/AlCu.eam.alloy Al
+Reading potential file LAMMPS_POTENTIALS/AlCu.eam.alloy with DATE: 2008-10-01
+neighbor 2.0 bin
+neigh_modify delay 10 check yes
+
+
+#--------- NVE-------
+reset_timestep 0
+timestep 0.001
+
+compute 4 all vacf
+
+thermo 1000
+thermo_style custom step pe ke etotal enthalpy temp vol press c_4[1] c_4[2] c_4[3] c_4[4]
+velocity all create ${temp_s} 1518772
+velocity all create 300 1518772
+
+fix 1 all nve
+dump 2 all custom atom 10 dump.nve${fileprefix} c_4[4]
+dump 2 all custom atom 10 dump.nveHW3_NVE c_4[4]
+ERROR: Expected integer parameter in input script or data file (../output.cpp:559)

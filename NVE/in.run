@@ -1,0 +1,47 @@
+# Affiliation: Dept. Materials Science and Engineering
+# University of Arizona
+# Abduljabar Alsayoud
+
+
+# Units energy:eV time:ps distance:angstrom flux:energy*velocity
+#---------Sim variables---------------
+variable fileprefix string HW3_NVE
+variable temp_s equal '300.0'
+variable press_s equal '1.0'
+log log.${fileprefix}
+
+#-----------Setup----------------------
+units metal            #Energy = eV , Distance= Angstroms
+dimension 3
+boundary p p p         #Periodic boundary conditions 
+atom_style atomic
+
+# ---------- Read Data ---------------------
+# Read config files (get the structure from https://www.materialsproject.org/)
+read_data Al_mp_NVT_optimized.data
+
+pair_style eam/alloy 
+pair_coeff * *  LAMMPS_POTENTIALS/AlCu.eam.alloy Al
+neighbor 2.0 bin 
+neigh_modify delay 10 check yes 
+
+
+#--------- NVE-------                                                                                                      
+reset_timestep 0
+timestep 0.001
+
+compute 4 all vacf
+
+thermo 1000
+thermo_style custom step pe ke etotal enthalpy temp vol press c_4[1] c_4[2] c_4[3] c_4[4]
+velocity all create ${temp_s} 1518772 
+
+fix 1 all nve
+dump 2 all custom atom 10 dump.nve${fileprefix} c_4[4]
+run 60000
+unfix 1
+undump 2
+
+######################################
+# SIMULATION DONE
+print "All done"

@@ -1,0 +1,4 @@
+ModuleCmd_Load.c(204):ERROR:105: Unable to locate a modulefile for 'gcc'
+directory: Command not found.
+ModuleCmd_Load.c(204):ERROR:105: Unable to locate a modulefile for 'lammps/gcc/17Nov16'
+setenv: Syntax Error.
